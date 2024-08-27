@@ -44,7 +44,7 @@ func MergeSort(tro []Sort) []Read {
 		}
 	}
 
-	res := make([]Read, 0, size)
+	res := make([]Read, size)
 
 	for index := 0; index < size; index++ {
 		var (
@@ -61,10 +61,11 @@ func MergeSort(tro []Sort) []Read {
 
 				if tro[i].pointer >= len(tro[i].list) {
 					tro = append(tro[:i], tro[i+1:]...)
-					// if len(tro) == 1 {
-					//copy(res[index:], tro[0].list[tro[0].pointer:])
-					// 	return res
-					// }
+					if len(tro) == 1 {
+						index++
+						copy(res[index:], tro[0].list[tro[0].pointer:])
+						return res[:size]
+					}
 				}
 			} else if v.list[v.pointer].offset < minKey.offset {
 				minKey = v.list[v.pointer]
@@ -72,17 +73,16 @@ func MergeSort(tro []Sort) []Read {
 			}
 		}
 
-		res = append(res, minKey)
+		res[index] = minKey
 		tro[minIndex].pointer++
 
 		if tro[minIndex].pointer >= len(tro[minIndex].list) {
 			tro = append(tro[:minIndex], tro[minIndex+1:]...)
-			// if len(tro) == 1 {
-			// 	fmt.Println(res)
-			// 	fmt.Println(tro[0].list[tro[0].pointer:])
-			// 	copy(res[index:], tro[0].list[tro[0].pointer:])
-			// 	return res
-			// }
+			if len(tro) == 1 {
+				index++
+				copy(res[index:], tro[0].list[tro[0].pointer:])
+				return res[:size]
+			}
 		}
 	}
 
