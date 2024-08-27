@@ -8,12 +8,12 @@ func main() {
 		memTable, 0,
 	}
 
-	freezeTable := []Read{{"M", 2}, {"M", 100}, {"M", 647}, {"M", 3222}, {"M", 6451}}
+	freezeTable := []Read{{"M", 2}, {"M", 100}, {"M", 647}, {"M", 3222}}
 	freezeSort := Sort{
 		freezeTable, 0,
 	}
 
-	discTable := []Read{{"D", 2000}, {"C", 2020}, {"D", 3201}, {"D", 3222}, {"D", 4201}}
+	discTable := []Read{{"D", 2000}, {"C", 2020}, {"D", 3201}, {"D", 3222}}
 	discSort := Sort{
 		discTable, 0,
 	}
@@ -35,13 +35,12 @@ type Sort struct {
 
 func MergeSort(tro []Sort) []Read {
 	var size int
-	for i := 0; i < len(tro); {
-		ln := len(tro[i].list)
+	for index, obj := range tro {
+		ln := len(obj.list)
 		if ln != 0 {
 			size += ln
-			i++
 		} else {
-			tro = append(tro[:i], tro[i+1:]...)
+			tro = append(tro[:index], tro[index+1:]...)
 		}
 	}
 
@@ -56,7 +55,18 @@ func MergeSort(tro []Sort) []Read {
 		for i := 1; i < len(tro); i++ {
 			v := &tro[i]
 
-			if v.list[v.pointer].offset < minKey.offset {
+			if v.list[v.pointer].offset == minKey.offset {
+				tro[i].pointer++
+				size--
+
+				if tro[i].pointer >= len(tro[i].list) {
+					tro = append(tro[:i], tro[i+1:]...)
+					// if len(tro) == 1 {
+					// 	copy(res[:index], tro[0].list)
+					// 	return res
+					// }
+				}
+			} else if v.list[v.pointer].offset < minKey.offset {
 				minKey = v.list[v.pointer]
 				minIndex = i
 			}
@@ -67,53 +77,12 @@ func MergeSort(tro []Sort) []Read {
 
 		if tro[minIndex].pointer >= len(tro[minIndex].list) {
 			tro = append(tro[:minIndex], tro[minIndex+1:]...)
+			// if len(tro) == 1 {
+			// 	copy(res[:index], tro[0].list)
+			// 	return res
+			// }
 		}
 	}
 
 	return res
 }
-
-// func MergeSort(tro []Sort) []Read {
-// 	var size int
-// 	for index, obj := range tro {
-// 		ln := len(obj.list)
-// 		if ln != 0 {
-// 			size += ln
-// 		} else {
-// 			tro = append(tro[:index], tro[index+1:]...)
-// 		}
-// 	}
-
-// 	res := make([]Read, 0, size)
-
-// 	for index := 0; index < size; index++ {
-// 		var (
-// 			minKey   Read = tro[0].list[tro[0].pointer]
-// 			previous Read
-// 		)
-
-// 		for i := 0; i < len(tro); i++ {
-// 			v := &tro[i]
-// 			if v.list[v.pointer].offset == previous.offset || v.list[v.pointer].offset == minKey.offset {
-// 				v.pointer++ //why is this pointer is not updated
-// 				if len(v.list) == v.pointer {
-// 					tro = append(tro[:i], tro[i+1:]...)
-// 					//check if tro is empty [empty is if just one element inside tro]
-// 					continue
-// 				}
-
-// 				//check if the next key is that key
-// 				if v.list[v.pointer].offset < minKey.offset {
-// 					minKey = v.list[v.pointer]
-// 				}
-// 			} else if v.list[v.pointer].offset < minKey.offset {
-// 				minKey = v.list[v.pointer]
-// 			}
-// 		}
-
-// 		res = append(res, minKey)
-// 		previous = minKey
-// 	}
-
-// 	return res
-// }
