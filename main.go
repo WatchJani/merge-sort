@@ -62,7 +62,7 @@ func MergeSort(tro []Sort) []Read {
 				if tro[i].pointer >= len(tro[i].list) {
 					tro = append(tro[:i], tro[i+1:]...)
 					// if len(tro) == 1 {
-					// 	copy(res[:index], tro[0].list)
+					//copy(res[index:], tro[0].list[tro[0].pointer:])
 					// 	return res
 					// }
 				}
@@ -78,7 +78,9 @@ func MergeSort(tro []Sort) []Read {
 		if tro[minIndex].pointer >= len(tro[minIndex].list) {
 			tro = append(tro[:minIndex], tro[minIndex+1:]...)
 			// if len(tro) == 1 {
-			// 	copy(res[:index], tro[0].list)
+			// 	fmt.Println(res)
+			// 	fmt.Println(tro[0].list[tro[0].pointer:])
+			// 	copy(res[index:], tro[0].list[tro[0].pointer:])
 			// 	return res
 			// }
 		}
